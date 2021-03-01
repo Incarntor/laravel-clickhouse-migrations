@@ -1,6 +1,6 @@
 <?php
 
-class {FILE_NAME} extends \Grishalive\ClickhouseMigrations\Migrations\BaseMigration
+class {FILE_NAME} extends \lexxkn\ClickhouseMigrations\Migrations\BaseMigration
 {
     
     /**
