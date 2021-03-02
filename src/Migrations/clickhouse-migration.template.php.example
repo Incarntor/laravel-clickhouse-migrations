@@ -1,6 +1,8 @@
 <?php
 
-class {FILE_NAME} extends \lexxkn\ClickhouseMigrations\Migrations\BaseMigration
+use \lexxkn\ClickhouseMigrations\Migrations\BaseMigration as Migration;
+
+class {FILE_NAME} extends Migration
 {
     
     /**
