@@ -2,8 +2,31 @@
 
 namespace lexxkn\ClickhouseMigrations;
 
+use Tinderbox\ClickhouseBuilder\Integrations\Laravel\Connection;
+
 class Builder extends \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder
 {
+    /**
+     * Builder constructor.
+     *
+     * @param \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Connection $connection
+     */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+
+        $options = [];
+        $clusters = $this->connection->getConfig()['clusters'] ?? [];
+        if (count($clusters) > 0) {
+            $cluster = array_key_first($clusters);
+            if (is_string($cluster)) {
+                $options['onCluster'] = $cluster;
+            }
+        }
+
+        $this->grammar = new Query\Grammar($options);
+    }
+
     /**
      * Writes data using raw SQL
      *
