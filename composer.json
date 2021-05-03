@@ -1,5 +1,5 @@
 {
-    "name": "lexxkn/clickhouse-migrations",
+    "name": "incarntor/clickhouse-migrations",
     "description": "Clickhouse migrations for laravel/lumen based on clickhouse-builder",
     "keywords": [
         "laravel",
