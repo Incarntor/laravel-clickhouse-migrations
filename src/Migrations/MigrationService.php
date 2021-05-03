@@ -162,9 +162,9 @@ class MigrationService
 
     /**
      *
-     * @return array
+     * @return string|null
      */
-    protected function getClusterName(): array
+    protected function getClusterName(): ?string
     {
         return app()->make('config')->get('clickhouse.clusterName');
     }
