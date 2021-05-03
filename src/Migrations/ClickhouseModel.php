@@ -6,7 +6,6 @@ use Tinderbox\ClickhouseBuilder\Query\Builder;
 
 class ClickhouseModel
 {
-
     /**
      *
      * @var string
@@ -15,11 +14,20 @@ class ClickhouseModel
 
     /**
      *
-     * @param string $tableName
+     * @var string|null
      */
-    public function __construct(string $tableName = null)
+    protected $clusterName = null;
+
+    /**
+     * ClickhouseModel constructor.
+     *
+     * @param string|null $tableName
+     * @param string|null $clusterName
+     */
+    public function __construct(string $tableName = null, string $clusterName = null)
     {
         !is_null($tableName) && $this->tableName = $tableName;
+        !is_null($clusterName) && $this->clusterName = $clusterName;
     }
 
     /**
@@ -28,8 +36,9 @@ class ClickhouseModel
      */
     public function createMigrationTable()
     {
+        $clusterQueryPart = ((is_string($this->clusterName)) ? 'ON CLUSTER ' . $this->clusterName . '' : '');
         $this->getBuilder()->getConnection()->getClient()->writeOne('
-            CREATE TABLE IF NOT EXISTS ' . $this->tableName . ' (
+            CREATE TABLE IF NOT EXISTS '. $this->tableName . ' ' . $clusterQueryPart  .' (
                 version String,
                 apply_time DateTime DEFAULT NOW()
             ) ENGINE = ReplacingMergeTree()
@@ -44,7 +53,8 @@ class ClickhouseModel
      */
     public function getLastAppliedMigration()
     {
-        return $this->getBuilder()->getConnection()->getClient()->readOne('
+        $client = $this->getBuilder()->getConnection()->getClient();
+        $query = '
             SELECT
                 version
             FROM
@@ -53,7 +63,13 @@ class ClickhouseModel
                 apply_time DESC
             LIMIT
                 1
-        ')->current()['version'] ?? null;
+        ';
+
+        if ($client->readOne($query)->count() > 0) {
+            return $client->readOne($query)->current()['version'] ?? null;
+        }
+
+        return null;
     }
 
     /**

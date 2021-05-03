@@ -30,7 +30,7 @@ class MigrationService
     public function __construct()
     {
         $this->fileModel = new FileModel();
-        $this->clickhouseModel = new ClickhouseModel($this->getConfig()['table']);
+        $this->clickhouseModel = new ClickhouseModel($this->getConfig()['table'], $this->getClusterName());
     }
 
     /**
@@ -160,4 +160,12 @@ class MigrationService
         return $this->config;
     }
 
+    /**
+     *
+     * @return array
+     */
+    protected function getClusterName(): array
+    {
+        return app()->make('config')->get('clickhouse.clusterName');
+    }
 }
