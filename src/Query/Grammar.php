@@ -75,7 +75,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
      *
      * @return string
      */
-    public function compileDropTable($tableName, bool $ifExists = false): string
+    public function compileDropTable($tableName, $ifExists = false): string
     {
         if ( $tableName instanceof Identifier ) {
             $tableName = (string) $tableName;
