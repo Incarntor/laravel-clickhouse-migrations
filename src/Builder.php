@@ -117,6 +117,58 @@ class Builder extends \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder
         return $this->connection->getClient()->writeOne($this->grammar->compileCreateTable($tableName, $engine, $structure, true));
     }
 
+    /**
+     * Executes query to create view
+     *
+     * @param        $viewName
+     * @param string $query
+     *
+     * @return mixed
+     */
+    public function createView($viewName, string $query)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileCreateView($viewName, $query));
+    }
+
+    /**
+     * Executes query to create view if view does not exists
+     *
+     * @param        $viewName
+     * @param string $query
+     *
+     * @return mixed
+     */
+    public function createViewIfNotExists($viewName, string $query)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileCreateView($viewName, $query, true));
+    }
+
+    /**
+     * Executes query to create materialized view
+     *
+     * @param        $viewName
+     * @param string $query
+     *
+     * @return mixed
+     */
+    public function createMaterializedView($viewName, string $query)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileCreateView($viewName, $query, false, true));
+    }
+
+    /**
+     * Executes query to create materialized view if view does not exists
+     *
+     * @param        $viewName
+     * @param string $query
+     *
+     * @return mixed
+     */
+    public function createMaterializedViewIfNotExists($viewName, string $query)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileCreateView($viewName, $query, true, true));
+    }
+
     public function dropTable($tableName)
     {
         return $this->connection->getClient()->writeOne($this->grammar->compileDropTable($tableName));
@@ -126,5 +178,14 @@ class Builder extends \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder
     {
         return $this->connection->getClient()->writeOne($this->grammar->compileDropTable($tableName, true));
     }
-}
 
+    public function dropView($viewName)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileDropView($viewName));
+    }
+
+    public function dropViewIfExists($viewName)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileDropView($viewName, true));
+    }
+}
