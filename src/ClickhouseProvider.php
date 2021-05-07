@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations;
+namespace incarntor\ClickhouseMigrations;
 
 class ClickhouseProvider extends \Illuminate\Support\ServiceProvider
 {

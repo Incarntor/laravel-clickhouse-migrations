@@ -1,10 +1,10 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations;
+namespace incarntor\ClickhouseMigrations;
 
 use Tinderbox\ClickhouseBuilder\Integrations\Laravel\Connection;
 use Tinderbox\ClickhouseBuilder\Query\Builder;
-use lexxkn\ClickhouseMigrations\Builder as ClickhouseBuilder;
+use incarntor\ClickhouseMigrations\Builder as ClickhouseBuilder;
 
 class Clickhouse
 {

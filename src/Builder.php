@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations;
+namespace incarntor\ClickhouseMigrations;
 
 use Tinderbox\ClickhouseBuilder\Integrations\Laravel\Connection;
 

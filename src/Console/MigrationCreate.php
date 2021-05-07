@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Console;
+namespace incarntor\ClickhouseMigrations\Console;
 
 class MigrationCreate extends \Illuminate\Console\Command
 {
@@ -23,7 +23,7 @@ class MigrationCreate extends \Illuminate\Console\Command
      */
     public function handle()
     {
-        $migrationService = new \lexxkn\ClickhouseMigrations\Migrations\MigrationService();
+        $migrationService = new \incarntor\ClickhouseMigrations\Migrations\MigrationService();
         if ($migrationService->create($this->argument('name'))) {
             $this->info('Migration created successfully');
         }

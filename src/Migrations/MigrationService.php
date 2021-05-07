@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Migrations;
+namespace incarntor\ClickhouseMigrations\Migrations;
 
 class MigrationService
 {
@@ -13,13 +13,13 @@ class MigrationService
     
     /**
      *
-     * @var lexxkn\ClickhouseMigrations\Migrations\ClickhouseModel
+     * @var incarntor\ClickhouseMigrations\Migrations\ClickhouseModel
      */
     protected $clickhouseModel;
     
     /**
      *
-     * @var lexxkn\ClickhouseMigrations\Migrations\FileModel
+     * @var incarntor\ClickhouseMigrations\Migrations\FileModel
      */
     protected $fileModel;
 
@@ -158,7 +158,7 @@ class MigrationService
     /**
      * 
      * @param string $file
-     * @return \lexxkn\ClickhouseMigrations\Migrations\MigrationInterface
+     * @return \incarntor\ClickhouseMigrations\Migrations\MigrationInterface
      */
     protected function getMigrationObject(string $file): MigrationInterface
     {
