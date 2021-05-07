@@ -22,7 +22,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "lexxkn\\ClickhouseMigrations\\": "src/"
+            "incarntor\\ClickhouseMigrations\\": "src/"
         }
     }
 }

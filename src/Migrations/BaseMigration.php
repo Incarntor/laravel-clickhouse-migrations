@@ -1,16 +1,16 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Migrations;
+namespace incarntor\ClickhouseMigrations\Migrations;
 
 abstract class BaseMigration implements MigrationInterface
 {
     /**
      *
-     * @return \lexxkn\ClickhouseMigrations\Builder
+     * @return \incarntor\ClickhouseMigrations\Builder
      */
-    protected function getBuilder(): \lexxkn\ClickhouseMigrations\Builder
+    protected function getBuilder(): \incarntor\ClickhouseMigrations\Builder
     {
-        return \lexxkn\ClickhouseMigrations\Clickhouse::builder();
+        return \incarntor\ClickhouseMigrations\Clickhouse::builder();
     }
 
 }

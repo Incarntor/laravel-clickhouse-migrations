@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Migrations;
+namespace incarntor\ClickhouseMigrations\Migrations;
 
 class FileModel
 {

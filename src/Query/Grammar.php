@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Query;
+namespace incarntor\ClickhouseMigrations\Query;
 
 use Tinderbox\ClickhouseBuilder\Query\Identifier;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Console;
+namespace incarntor\ClickhouseMigrations\Console;
 
 class Migrate extends \Illuminate\Console\Command
 {

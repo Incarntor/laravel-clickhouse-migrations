@@ -1,6 +1,6 @@
 <?php
 
-use \lexxkn\ClickhouseMigrations\Migrations\BaseMigration as Migration;
+use \incarntor\ClickhouseMigrations\Migrations\BaseMigration as Migration;
 
 class {FILE_NAME} extends Migration
 {
