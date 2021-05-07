@@ -173,6 +173,6 @@ class ClickhouseModel
      */
     protected function getBuilder(): \incarntor\ClickhouseMigrations\Builder
     {
-        return \lexxkn\ClickhouseMigrations\Clickhouse::builder();
+        return \incarntor\ClickhouseMigrations\Clickhouse::builder();
     }
 }
