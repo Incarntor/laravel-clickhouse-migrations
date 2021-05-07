@@ -19,7 +19,7 @@ class MigrationService
     
     /**
      *
-     * @var lexxkn\ClickhouseMigrations\Migrations\FileModel
+     * @var incarntor\ClickhouseMigrations\Migrations\FileModel
      */
     protected $fileModel;
 
