@@ -1,6 +1,6 @@
 <?php
 
-namespace lexxkn\ClickhouseMigrations\Migrations;
+namespace incarntor\ClickhouseMigrations\Migrations;
 
 use Tinderbox\ClickhouseBuilder\Query\Builder;
 
@@ -169,9 +169,9 @@ class ClickhouseModel
 
     /**
      *
-     * @return \lexxkn\ClickhouseMigrations\Builder
+     * @return \incarntor\ClickhouseMigrations\Builder
      */
-    protected function getBuilder(): \lexxkn\ClickhouseMigrations\Builder
+    protected function getBuilder(): \incarntor\ClickhouseMigrations\Builder
     {
         return \lexxkn\ClickhouseMigrations\Clickhouse::builder();
     }
