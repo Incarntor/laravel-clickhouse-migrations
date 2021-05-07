@@ -34,6 +34,15 @@ class MigrationService
     }
 
     /**
+     *
+     * @return int
+     */
+    public function getLastBatch(): int
+    {
+        return $this->clickhouseModel->getLastBatch();
+    }
+
+    /**
      * 
      * @return array
      */
@@ -56,26 +65,41 @@ class MigrationService
     }
 
     /**
+     *
+     * @return Collection
+     */
+    public function getLastAppliedMigrations(): array
+    {
+        $this->createMigrationTable();
+        return $this->clickhouseModel->getLastAppliedMigrations();
+    }
+
+    /**
      * 
      * @param string $file
+     * @param int $batch
+     *
      * @return bool
      */
-    public function up(string $file): bool
+    public function up(string $file, int $batch = 0): bool
     {
         $this->getMigrationObject($file)->up();
-        $this->clickhouseModel->addMigration($file);
+        $this->clickhouseModel->addMigration($file, $batch);
         return true;
     }
     
     /**
-     * 
-     * @param string $file
+     *
+     * @param array $files
      * @return bool
      */
-    public function down(string $file): bool
+    public function down(array $files): bool
     {
-        $this->getMigrationObject($file)->down();
-        $this->clickhouseModel->removeMigration($file);
+        foreach ($files as $file) {
+            $this->getMigrationObject($file)->down();
+        }
+
+        $this->clickhouseModel->removeMigrations($files);
         return true;
     }
     
