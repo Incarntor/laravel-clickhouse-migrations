@@ -4,19 +4,19 @@ namespace incarntor\ClickhouseMigrations\Console;
 
 class Migrate extends \Illuminate\Console\Command
 {
-    
+
     /**
      *
      * @var string
      */
     protected $signature = 'clickhouse:migrate {--down} {--y}';
-    
+
     /**
      *
      * @var string
      */
     protected $description = 'Clickhouse migrations';
-    
+
     /**
      *
      * @var \lexxkn\ClickhouseMigrations\Migrations\MigrationService
@@ -24,26 +24,26 @@ class Migrate extends \Illuminate\Console\Command
     protected $migrationService;
 
     /**
-     * 
+     *
      * Class constructor
      */
     public function __construct()
     {
         parent::__construct();
-        $this->migrationService = new \lexxkn\ClickhouseMigrations\Migrations\MigrationService();
+        $this->migrationService = new \incarntor\ClickhouseMigrations\Migrations\MigrationService();
     }
 
     /**
-     * 
+     *
      * @return bool
      */
     public function handle(): bool
     {
         return $this->option('down') ? $this->down() : $this->up();
     }
-    
+
     /**
-     * 
+     *
      * @return bool
      */
     protected function up(): bool
@@ -69,9 +69,9 @@ class Migrate extends \Illuminate\Console\Command
         }
         return true;
     }
-    
+
     /**
-     * 
+     *
      * @return bool
      */
     protected function down(): bool
@@ -96,5 +96,5 @@ class Migrate extends \Illuminate\Console\Command
 
         return true;
     }
-    
+
 }
