@@ -49,6 +49,8 @@ class Migrate extends \Illuminate\Console\Command
     protected function up(): bool
     {
         $nonAppliedMigrations = $this->migrationService->getNonAppliedMigrations();
+        $nextBatch = $this->migrationService->getLastBatch() + 1;
+
         if ($nonAppliedMigrations->isEmpty()) {
             $this->info('There are no new migrations');
             return true;
@@ -61,7 +63,7 @@ class Migrate extends \Illuminate\Console\Command
             return true;
         }
         foreach ($nonAppliedMigrations as $nonAppliedMigration) {
-            if ($this->migrationService->up($nonAppliedMigration)) {
+            if ($this->migrationService->up($nonAppliedMigration, $nextBatch)) {
                 $this->info('Migration ' . $nonAppliedMigration . ' applied');
             }
         }
@@ -74,19 +76,24 @@ class Migrate extends \Illuminate\Console\Command
      */
     protected function down(): bool
     {
-        $migration = $this->migrationService->getLastAppliedMigration();
-        if (is_null($migration)) {
+        $lastAppliedMigrations = $this->migrationService->getLastAppliedMigrations();
+
+        if (count($lastAppliedMigrations) === 0) {
             $this->info('There are no applied migrations');
             return true;
         }
+
         $this->info(
-                'Migration:' . "\n" .
-                "\t" . $migration
+            'Migrations:' . "\n\t" .
+            implode("\n\t", $lastAppliedMigrations)
         );
+
         if (!$this->option('y') && !$this->confirm('Are you sure?')) {
             return true;
         }
-        $this->migrationService->down($migration);
+
+        $this->migrationService->down($lastAppliedMigrations);
+
         return true;
     }
     

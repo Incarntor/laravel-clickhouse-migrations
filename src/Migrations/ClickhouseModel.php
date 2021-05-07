@@ -38,9 +38,10 @@ class ClickhouseModel
     {
         $clusterQueryPart = ((is_string($this->clusterName)) ? 'ON CLUSTER ' . $this->clusterName . '' : '');
         $this->getBuilder()->getConnection()->getClient()->writeOne('
-            CREATE TABLE IF NOT EXISTS '. $this->tableName . ' ' . $clusterQueryPart  .' (
+            CREATE TABLE IF NOT EXISTS ' . $this->tableName . ' ' . $clusterQueryPart . ' (
                 version String,
-                apply_time DateTime DEFAULT NOW()
+                apply_time DateTime DEFAULT NOW(),
+                batch UInt16 DEFAULT 0
             ) ENGINE = ReplacingMergeTree()
                 ORDER BY
                     (version)
@@ -48,8 +49,47 @@ class ClickhouseModel
     }
 
     /**
-     *
+     * @return array
+     */
+    public function getLastAppliedMigrations(): array
+    {
+        $client = $this->getBuilder()->getConnection()->getClient();
+        $query = '
+            SELECT
+                version
+            FROM
+                ' . $this->tableName . ' m
+            WHERE batch=(SELECT max(batch) FROM ' . $this->tableName . ')
+            ORDER BY
+                apply_time DESC
+        ';
+
+        if ( $client->readOne($query)->count() > 0 ) {
+            return array_column($client->readOne($query)->getRows(), 'version');
+        }
+
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getLastBatch(): int
+    {
+        $client = $this->getBuilder()->getConnection()->getClient();
+        $query = 'SELECT max(batch) as max_batch FROM ' . $this->tableName . ' m';
+
+        if ( $client->readOne($query)->count() > 0 ) {
+            return $client->readOne($query)->current()['max_batch'] ?? 0;
+        }
+
+        return 0;
+    }
+
+    /**
      * @return string|null
+     * @deprecated
+     *
      */
     public function getLastAppliedMigration()
     {
@@ -65,7 +105,7 @@ class ClickhouseModel
                 1
         ';
 
-        if ($client->readOne($query)->count() > 0) {
+        if ( $client->readOne($query)->count() > 0 ) {
             return $client->readOne($query)->current()['version'] ?? null;
         }
 
@@ -86,27 +126,45 @@ class ClickhouseModel
     /**
      *
      * @param string $version
+     * @param int    $batch
+     *
      * @return bool
      */
-    public function addMigration(string $version): bool
+    public function addMigration(string $version, int $batch = 0): bool
     {
-        return $this->getBuilder()->from($this->tableName)->insert(['version' => $version]);
+        return $this->getBuilder()->from($this->tableName)->insert(['version' => $version, 'batch' => $batch]);
     }
 
     /**
-     *
      * @param string $version
+     *
      * @return bool
+     * @deprecated
      */
     public function removeMigration(string $version): bool
     {
         return $this->getBuilder()
-            ->from($this->tableName)
-            ->where(
-                'version',
-                '=' ,
-                $version
-            )->delete();
+                    ->from($this->tableName)
+                    ->where(
+                        'version',
+                        '=' ,
+                        $version
+                    )->delete();
+    }
+
+    /**
+     * @param array $versions
+     *
+     * @return bool
+     */
+    public function removeMigrations(array $versions): bool
+    {
+        return $this->getBuilder()
+                    ->from($this->tableName)
+                    ->whereIn(
+                        'version',
+                        $versions
+                    )->delete();
     }
 
     /**
