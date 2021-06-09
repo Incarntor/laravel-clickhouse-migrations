@@ -159,7 +159,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
     private function compileOnClusterQuery(string $sql): string
     {
         if ( $this->options['onCluster'] !== null ) {
-            $sql .= " ON CLUSTER {$this->options['onCluster']}";
+            $sql .= " ON CLUSTER {$this->options['onCluster']} ";
         }
 
         return $sql;
