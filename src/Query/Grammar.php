@@ -64,9 +64,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
 
         $sql = "ALTER TABLE {$tableName} ";
 
-        $sql .= $this->compileOnClusterQuery($sql);
-
-        return $sql . " $modifyType COLUMN {$columnName} {$columnType}";
+        return $this->compileOnClusterQuery($sql) . " $modifyType COLUMN {$columnName} {$columnType}";
     }
 
     /**
@@ -82,9 +80,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
         $tableName = $this->compileTableName($tableName);
         $sql = "CREATE TABLE " . ($ifNotExists ? 'IF NOT EXISTS ' : '') . "{$tableName} ";
 
-        $sql .= $this->compileOnClusterQuery($sql);
-
-        return $sql . "({$this->compileTableStructure($structure)}) ENGINE = {$engine}";
+        return $this->compileOnClusterQuery($sql) . "({$this->compileTableStructure($structure)}) ENGINE = {$engine}";
     }
 
     /**
@@ -100,9 +96,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
         $viewName = $this->compileTableName($viewName);
         $sql = 'CREATE ' . (($isMaterialized === true) ? 'MATERIALIZED ' : '') . 'VIEW ' . ($ifNotExists ? 'IF NOT EXISTS ' : '') . "{$viewName} ";
 
-        $sql .= $this->compileOnClusterQuery($sql);
-
-        return $sql . " AS {$query}";
+        return $this->compileOnClusterQuery($sql) . " AS {$query}";
     }
 
     /**
@@ -116,9 +110,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
         $tableName = $this->compileTableName($tableName);
         $sql = "DROP TABLE " . ($ifExists ? 'IF EXISTS ' : '') . "{$tableName} ";
 
-        $sql .= $this->compileOnClusterQuery($sql);
-
-        return $sql;
+        return $this->compileOnClusterQuery($sql);
     }
 
     /**
@@ -132,9 +124,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
         $viewName = $this->compileTableName($viewName);
         $sql = "DROP VIEW " . ($ifExists ? 'IF EXISTS ' : '') . "{$viewName} ";
 
-        $sql .= $this->compileOnClusterQuery($sql);
-
-        return $sql;
+        return $this->compileOnClusterQuery($sql);
     }
 
     /**
