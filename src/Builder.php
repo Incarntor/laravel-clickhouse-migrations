@@ -90,6 +90,33 @@ class Builder extends \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder
     }
 
     /**
+     * Executes query to add column
+     *
+     * @param        $tableName
+     * @param string $columnName
+     * @param string $columnType
+     *
+     * @return mixed
+     */
+    public function addColumn($tableName, string $columnName, string $columnType)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileAddColumn($tableName, $columnName, $columnType));
+    }
+
+    /**
+     * Executes query to drop column
+     *
+     * @param        $tableName
+     * @param string $columnName
+     *
+     * @return mixed
+     */
+    public function dropColumn($tableName, string $columnName)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileDropColumn($tableName, $columnName));
+    }
+
+    /**
      * Executes query to create table
      *
      * @param        $tableName
