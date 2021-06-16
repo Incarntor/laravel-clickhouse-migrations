@@ -86,13 +86,12 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
     /**
      * @param        $viewName
      * @param string $query
-     * @param bool   $isMaterialized
      *
      * @return string
      */
-    public function compileCreateOrReplaceView($viewName, string $query, bool $isMaterialized = false): string
+    public function compileCreateOrReplaceView($viewName, string $query): string
     {
-        return $this->compileCreateView(viewName: $viewName, query: $query, isMaterialized: $isMaterialized, isReplace: true);
+        return $this->compileCreateView(viewName: $viewName, query: $query, isReplace: true);
     }
 
     /**
@@ -138,7 +137,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
     public function compileDropView($viewName, bool $ifExists = false): string
     {
         $viewName = $this->compileTableName($viewName);
-        $sql = "DROP VIEW " . ($ifExists ? 'IF EXISTS ' : '') . "{$viewName} ";
+        $sql = "DROP VIEW " . ($ifExists ? 'IF EXISTS ' : '') . "$viewName ";
 
         return $this->compileOnClusterQuery($sql);
     }

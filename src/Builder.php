@@ -180,7 +180,7 @@ class Builder extends \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder
      */
     public function createOrReplaceView($viewName, string $query)
     {
-        return $this->connection->getClient()->writeOne($this->grammar->compileCreateOrReplaceView($viewName, $query, true));
+        return $this->connection->getClient()->writeOne($this->grammar->compileCreateOrReplaceView($viewName, $query));
     }
 
     /**
