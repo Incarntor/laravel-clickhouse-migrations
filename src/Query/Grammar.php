@@ -2,6 +2,7 @@
 
 namespace incarntor\ClickhouseMigrations\Query;
 
+use InvalidArgumentException;
 use Tinderbox\ClickhouseBuilder\Query\Identifier;
 
 class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
@@ -11,7 +12,6 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
      */
     protected array $options = [];
 
-    protected array $allowedTableTypeList        = ['TABLE', 'VIEW', 'MATERIALIZED VIEW'];
     protected array $allowedModifyColumnTypeList = ['ADD', 'DROP', 'CLEAR', 'COMMENT', 'MODIFY'];
 
     /**
@@ -58,13 +58,13 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
     protected function processColumn(Identifier|string $tableName, string $modifyType, string $columnName, string $columnType = ''): string
     {
         $tableName = $this->compileTableName($tableName);
-        if ( in_array($modifyType, $this->allowedModifyColumnTypeList, true) === false ) {
-            throw new \InvalidArgumentException('Invalid modify type. allowed: ' . implode(', ', $this->allowedModifyColumnTypeList));
+        if ( in_array(strtoupper($modifyType), $this->allowedModifyColumnTypeList, true) === false ) {
+            throw new InvalidArgumentException('Invalid modify type. allowed: ' . implode(', ', $this->allowedModifyColumnTypeList));
         }
 
-        $sql = "ALTER TABLE {$tableName} ";
+        $sql = "ALTER TABLE $tableName ";
 
-        return $this->compileOnClusterQuery($sql) . " $modifyType COLUMN {$columnName} {$columnType}";
+        return $this->compileOnClusterQuery($sql) . " $modifyType COLUMN $columnName $columnType";
     }
 
     /**
@@ -78,9 +78,21 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
     public function compileCreateTable($tableName, string $engine, array $structure, $ifNotExists = false): string
     {
         $tableName = $this->compileTableName($tableName);
-        $sql = "CREATE TABLE " . ($ifNotExists ? 'IF NOT EXISTS ' : '') . "{$tableName} ";
+        $sql = "CREATE TABLE " . ($ifNotExists ? 'IF NOT EXISTS ' : '') . "$tableName ";
 
-        return $this->compileOnClusterQuery($sql) . "({$this->compileTableStructure($structure)}) ENGINE = {$engine}";
+        return $this->compileOnClusterQuery($sql) . "({$this->compileTableStructure($structure)}) ENGINE = $engine";
+    }
+
+    /**
+     * @param        $viewName
+     * @param string $query
+     * @param bool   $isMaterialized
+     *
+     * @return string
+     */
+    public function compileCreateOrReplaceView($viewName, string $query, bool $isMaterialized = false): string
+    {
+        return $this->compileCreateView(viewName: $viewName, query: $query, isMaterialized: $isMaterialized, isReplace: true);
     }
 
     /**
@@ -88,15 +100,19 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
      * @param string $query
      * @param bool   $ifNotExists
      * @param bool   $isMaterialized
+     * @param bool   $isReplace
      *
      * @return string
      */
-    public function compileCreateView($viewName, string $query, bool $ifNotExists = false, bool $isMaterialized = false): string
+    public function compileCreateView($viewName, string $query, bool $ifNotExists = false, bool $isMaterialized = false, bool $isReplace = false): string
     {
         $viewName = $this->compileTableName($viewName);
-        $sql = 'CREATE ' . (($isMaterialized === true) ? 'MATERIALIZED ' : '') . 'VIEW ' . ($ifNotExists ? 'IF NOT EXISTS ' : '') . "{$viewName} ";
+        $sql = 'CREATE '
+               . (($isReplace === true) ? ' OR REPLACE ' : '')
+               . (($isMaterialized === true) ? 'MATERIALIZED ' : '') . 'VIEW '
+               . ($ifNotExists ? 'IF NOT EXISTS ' : '') . "$viewName ";
 
-        return $this->compileOnClusterQuery($sql) . " AS {$query}";
+        return $this->compileOnClusterQuery($sql) . " AS $query";
     }
 
     /**
@@ -108,7 +124,7 @@ class Grammar extends \Tinderbox\ClickhouseBuilder\Query\Grammar
     public function compileDropTable($tableName, $ifExists = false): string
     {
         $tableName = $this->compileTableName($tableName);
-        $sql = "DROP TABLE " . ($ifExists ? 'IF EXISTS ' : '') . "{$tableName} ";
+        $sql = "DROP TABLE " . ($ifExists ? 'IF EXISTS ' : '') . "$tableName ";
 
         return $this->compileOnClusterQuery($sql);
     }
