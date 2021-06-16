@@ -171,6 +171,19 @@ class Builder extends \Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder
     }
 
     /**
+     * Executes query to create view if view does not exists
+     *
+     * @param        $viewName
+     * @param string $query
+     *
+     * @return mixed
+     */
+    public function createOrReplaceView($viewName, string $query)
+    {
+        return $this->connection->getClient()->writeOne($this->grammar->compileCreateOrReplaceView($viewName, $query, true));
+    }
+
+    /**
      * Executes query to create materialized view
      *
      * @param        $viewName
